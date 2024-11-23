@@ -34,7 +34,7 @@ public class VotoService {
             throw new IllegalStateException("A sessão de votação está encerrada.");
         }
 
-        if (votoRepository.existsByPautaIdAndAssociadoId(sessao.getPauta().getId(), associadoId)) {
+        if (votoRepository.existsBySessao_Pauta_IdAndAssociadoId(sessao.getPauta().getId(), associadoId)) {
             throw new IllegalArgumentException("O associado já votou nesta pauta.");
         }
 

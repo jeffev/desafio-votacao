@@ -53,7 +53,7 @@ class VotoServiceTest {
 
         when(sessaoService.buscarSessaoPorId(sessaoId)).thenReturn(sessao);
         when(sessaoService.isSessaoAberta(sessaoId)).thenReturn(true);
-        when(votoRepository.existsByPautaIdAndAssociadoId(pauta.getId(), associadoId)).thenReturn(false);
+        when(votoRepository.existsBySessao_Pauta_IdAndAssociadoId(pauta.getId(), associadoId)).thenReturn(false);
         when(votoRepository.save(any(Voto.class))).thenReturn(voto);
 
         Voto resultado = votoService.registrarVoto(sessaoId, associadoId, votoSim);
@@ -91,7 +91,7 @@ class VotoServiceTest {
 
         when(sessaoService.buscarSessaoPorId(sessaoId)).thenReturn(sessao);
         when(sessaoService.isSessaoAberta(sessaoId)).thenReturn(true);
-        when(votoRepository.existsByPautaIdAndAssociadoId(pauta.getId(), associadoId)).thenReturn(true);
+        when(votoRepository.existsBySessao_Pauta_IdAndAssociadoId(pauta.getId(), associadoId)).thenReturn(true);
 
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
             votoService.registrarVoto(sessaoId, associadoId, votoSim);

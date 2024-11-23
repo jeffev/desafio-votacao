@@ -14,7 +14,7 @@ public interface VotoRepository extends JpaRepository<Voto, Long> {
      * @param associadoId o identificador único do associado
      * @return true se o associado já votou, caso contrário false
      */
-    boolean existsByPautaIdAndAssociadoId(Long pautaId, String associadoId);
+    boolean existsBySessao_Pauta_IdAndAssociadoId(Long pautaId, String associadoId);
 
     /**
      * Conta o número de votos "Sim" em uma sessão específica.
