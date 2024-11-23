@@ -1,10 +1,12 @@
 package com.example.desafio_votacao.service;
 
+import com.example.desafio_votacao.exception.ResourceNotFoundException;
 import com.example.desafio_votacao.model.Sessao;
 import com.example.desafio_votacao.model.Voto;
 import com.example.desafio_votacao.repository.VotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class VotoService {
@@ -15,15 +17,25 @@ public class VotoService {
     @Autowired
     private SessaoService sessaoService;
 
+    /**
+     * Registra um voto para uma sessão, validando se a sessão está aberta
+     * e se o associado já votou.
+     *
+     * @param sessaoId    o ID da sessão
+     * @param associadoId o identificador único do associado
+     * @param votoSim     true para voto "Sim", false para voto "Não"
+     * @return o voto registrado
+     */
+    @Transactional
     public Voto registrarVoto(Long sessaoId, String associadoId, boolean votoSim) {
         Sessao sessao = sessaoService.buscarSessaoPorId(sessaoId);
 
         if (!sessaoService.isSessaoAberta(sessaoId)) {
-            throw new RuntimeException("A sessão de votação já está encerrada.");
+            throw new IllegalStateException("A sessão de votação está encerrada.");
         }
 
-        if (votoRepository.existsBySessaoIdAndAssociadoId(sessaoId, associadoId)) {
-            throw new RuntimeException("O associado já votou nesta pauta.");
+        if (votoRepository.existsByPautaIdAndAssociadoId(sessao.getPauta().getId(), associadoId)) {
+            throw new IllegalArgumentException("O associado já votou nesta pauta.");
         }
 
         Voto voto = new Voto();
@@ -34,15 +46,38 @@ public class VotoService {
         return votoRepository.save(voto);
     }
 
+    /**
+     * Conta o número de votos "Sim" em uma sessão específica.
+     *
+     * @param sessaoId o ID da sessão
+     * @return o total de votos "Sim"
+     */
     public long contarVotosSim(Long sessaoId) {
-        return votoRepository.findAll().stream()
-                .filter(v -> v.getSessao().getId().equals(sessaoId) && v.isVoto())
-                .count();
+        validarSessaoExistente(sessaoId);
+        return votoRepository.countBySessaoIdAndVoto(sessaoId, true);
     }
 
+    /**
+     * Conta o número de votos "Não" em uma sessão específica.
+     *
+     * @param sessaoId o ID da sessão
+     * @return o total de votos "Não"
+     */
     public long contarVotosNao(Long sessaoId) {
-        return votoRepository.findAll().stream()
-                .filter(v -> v.getSessao().getId().equals(sessaoId) && !v.isVoto())
-                .count();
+        validarSessaoExistente(sessaoId);
+        return votoRepository.countBySessaoIdAndVoto(sessaoId, false);
+    }
+
+    /**
+     * Valida se a sessão existe antes de realizar qualquer operação.
+     *
+     * @param sessaoId o ID da sessão
+     */
+    private void validarSessaoExistente(Long sessaoId) {
+        try {
+            sessaoService.buscarSessaoPorId(sessaoId);
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException("Sessão", sessaoId);
+        }
     }
 }

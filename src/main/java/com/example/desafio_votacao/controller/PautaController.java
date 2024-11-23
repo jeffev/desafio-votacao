@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,7 +18,10 @@ public class PautaController {
 
     @PostMapping
     public ResponseEntity<Pauta> criarPauta(@RequestBody Pauta pauta) {
-        return ResponseEntity.ok(pautaService.criarPauta(pauta));
+        Pauta pautaCriada = pautaService.criarPauta(pauta);
+
+        return ResponseEntity.created(URI.create("/pautas/" + pautaCriada.getId()))
+                .body(pautaCriada);
     }
 
     @GetMapping

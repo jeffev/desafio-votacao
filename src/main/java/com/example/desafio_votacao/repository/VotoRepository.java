@@ -7,5 +7,28 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VotoRepository extends JpaRepository<Voto, Long> {
 
-    boolean existsBySessaoIdAndAssociadoId(Long sessaoId, String associadoId);
+    /**
+     * Verifica se um associado já votou em uma pauta específica.
+     *
+     * @param pautaId   o ID da sessão
+     * @param associadoId o identificador único do associado
+     * @return true se o associado já votou, caso contrário false
+     */
+    boolean existsByPautaIdAndAssociadoId(Long pautaId, String associadoId);
+
+    /**
+     * Conta o número de votos "Sim" em uma sessão específica.
+     *
+     * @param sessaoId o ID da sessão
+     * @return o número de votos "Sim"
+     */
+    long countBySessaoIdAndVoto(Long sessaoId, boolean voto);
+
+    /**
+     * Conta o número total de votos em uma sessão específica.
+     *
+     * @param sessaoId o ID da sessão
+     * @return o número total de votos
+     */
+    long countBySessaoId(Long sessaoId);
 }
