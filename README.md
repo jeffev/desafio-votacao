@@ -182,6 +182,29 @@ Execute os testes com o seguinte comando:
 
 ---
 
+# Versionamento da API
+
+A API utiliza versionamento pela URL para garantir a compatibilidade entre diferentes versões sem impactar usuários existentes.
+
+## Por que versionar pela URL?
+
+- **Compatibilidade retroativa**: Versões antigas continuam funcionando enquanto novas versões são introduzidas.
+- **Controle explícito**: Usuários podem especificar qual versão da API querem usar.
+
+## Estratégia de versionamento
+
+A versão da API é especificada na URL:
+
+- **Versão 1**: `https://api.exemplo.com/v1/usuarios`
+- **Versão 2**: `https://api.exemplo.com/v2/usuarios`
+
+## Benefícios
+
+- Facilidade de manutenção de múltiplas versões.
+- Atualizações podem ser feitas sem quebrar compatibilidade com versões anteriores.
+
+---
+
 ## **Autor**
 Desenvolvido por **[Jefferson Valandro]**.  
 Entre em contato: [jeffev123@gmail.com](mailto:jeffev123@gmail.com)
