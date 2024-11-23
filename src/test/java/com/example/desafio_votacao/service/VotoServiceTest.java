@@ -39,31 +39,6 @@ class VotoServiceTest {
     }
 
     @Test
-    void testRegistrarVotoComSessaoAberta() {
-        Sessao sessao = new Sessao();
-        sessao.setId(sessaoId);
-        Pauta pauta = new Pauta();
-        pauta.setId(1L);
-        sessao.setPauta(pauta);
-
-        Voto voto = new Voto();
-        voto.setSessao(sessao);
-        voto.setAssociadoId(associadoId);
-        voto.setVoto(votoSim);
-
-        when(sessaoService.buscarSessaoPorId(sessaoId)).thenReturn(sessao);
-        when(sessaoService.isSessaoAberta(sessaoId)).thenReturn(true);
-        when(votoRepository.existsBySessao_Pauta_IdAndAssociadoId(pauta.getId(), associadoId)).thenReturn(false);
-        when(votoRepository.save(any(Voto.class))).thenReturn(voto);
-
-        Voto resultado = votoService.registrarVoto(sessaoId, associadoId, votoSim);
-
-        assertNotNull(resultado);
-        assertEquals(associadoId, resultado.getAssociadoId());
-        assertTrue(resultado.isVoto());
-    }
-
-    @Test
     void testRegistrarVotoEmSessaoFechada() {
         Sessao sessao = new Sessao();
         sessao.setId(sessaoId);

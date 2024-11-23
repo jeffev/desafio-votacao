@@ -48,10 +48,12 @@ public class VotoControllerTest {
 
         when(votoService.registrarVoto(sessaoId, associadoId, votoSim)).thenReturn(voto);
 
+        String votoJson = String.format("{\"sessaoId\": %d, \"associadoId\": \"%s\", \"votoSim\": %b}",
+                sessaoId, associadoId, votoSim);
+
         mockMvc.perform(post("/api/votos")
-                        .param("sessaoId", String.valueOf(sessaoId))
-                        .param("associadoId", associadoId)
-                        .param("votoSim", String.valueOf(votoSim)))
+                        .contentType("application/json")
+                        .content(votoJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.sessao.id").value(sessaoId))
                 .andExpect(jsonPath("$.associadoId").value(associadoId))
@@ -71,7 +73,8 @@ public class VotoControllerTest {
 
         mockMvc.perform(get("/api/votos/{sessaoId}/resultado", sessaoId))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Votos Sim: 5, Votos Não: 3"));
+                .andExpect(jsonPath("$.votosSim").value(votosSim))
+                .andExpect(jsonPath("$.votosNao").value(votosNao));
 
         verify(votoService, times(1)).contarVotosSim(sessaoId);
         verify(votoService, times(1)).contarVotosNao(sessaoId);

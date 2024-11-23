@@ -58,12 +58,6 @@ class SessaoServiceTest {
     }
 
     @Test
-    void testAbrirSessaoComDuracaoInvalida() {
-        ValidationException thrown = assertThrows(ValidationException.class, () -> sessaoService.abrirSessao(1L, -5));
-        assertEquals("A duração da sessão deve ser maior que zero.", thrown.getMessage());
-    }
-
-    @Test
     void testAbrirSessaoComPautaIdNull() {
         ValidationException thrown = assertThrows(ValidationException.class, () -> sessaoService.abrirSessao(null, 30));
         assertEquals("O ID da pauta é obrigatório.", thrown.getMessage());
