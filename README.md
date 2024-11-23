@@ -90,7 +90,7 @@ Aqui está o **README** atualizado com as alterações que foram feitas no códi
 ```
 
 ### **2. Abrir Sessão de Votação**
-**POST** `/api/votacao/sessao/abrir`  
+**POST** `/api/v1/votacao/sessao/abrir`  
 **Body (JSON):**
 ```json
 {
@@ -128,7 +128,7 @@ Aqui está o **README** atualizado com as alterações que foram feitas no códi
 ```
 
 ### **5. Validar CPF**
-**GET** `/api/cpf/validar/{cpf}`  
+**GET** `/api/v1/cpf/validar/{cpf}`  
 **Resposta (JSON):**
 ```json
 {
@@ -139,7 +139,7 @@ Aqui está o **README** atualizado com as alterações que foram feitas no códi
 - `{cpf}`: CPF a ser validado.
 
 ### **6. Listar Sessões**
-**GET** `/api/sessoes`  
+**GET** `/api/v1/sessoes`  
 **Resposta (JSON):**
 ```json
 [
@@ -159,7 +159,7 @@ Aqui está o **README** atualizado com as alterações que foram feitas no códi
 ```
 
 ### **7. Listar Sessões Abertas**
-**GET** `/api/sessoes/abertas`  
+**GET** `/api/v1/sessoes/abertas`  
 **Resposta (JSON):**
 ```json
 [

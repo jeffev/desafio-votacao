@@ -3,7 +3,6 @@ package com.example.desafio_votacao.service;
 import com.example.desafio_votacao.exception.ResourceNotFoundException;
 import com.example.desafio_votacao.model.Pauta;
 import com.example.desafio_votacao.model.Sessao;
-import com.example.desafio_votacao.model.Voto;
 import com.example.desafio_votacao.repository.VotoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
-@RequestMapping("/api/votos")
+@RequestMapping("/api/v1/votos")
 public class VotoController {
 
     private static final Logger log = LoggerFactory.getLogger(VotoController.class);
