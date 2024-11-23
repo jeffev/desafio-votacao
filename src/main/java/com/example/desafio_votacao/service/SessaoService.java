@@ -1,5 +1,6 @@
 package com.example.desafio_votacao.service;
 
+import com.example.desafio_votacao.exception.ResourceNotFoundException;
 import com.example.desafio_votacao.model.Pauta;
 import com.example.desafio_votacao.model.Sessao;
 import com.example.desafio_votacao.repository.SessaoRepository;
@@ -30,7 +31,7 @@ public class SessaoService {
 
     public Sessao buscarSessaoPorId(Long id) {
         return sessaoRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("Sessão não encontrada para o ID: " + id)
+                new ResourceNotFoundException("Sessão", id)
         );
     }
 

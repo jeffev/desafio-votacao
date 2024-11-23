@@ -1,5 +1,6 @@
 package com.example.desafio_votacao.service;
 
+import com.example.desafio_votacao.exception.ResourceNotFoundException;
 import com.example.desafio_votacao.model.Pauta;
 import com.example.desafio_votacao.repository.PautaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class PautaService {
 
     public Pauta buscarPautaPorId(Long id) {
         return pautaRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("Pauta não encontrada para o ID: " + id)
+                new ResourceNotFoundException("Pauta", id)
         );
     }
 }
