@@ -60,7 +60,12 @@ Esta é uma aplicação backend para gerenciar sessões de votação no contexto
 
 ---
 
+Aqui está o **README** atualizado com as alterações que foram feitas no código:
+
+---
+
 ## **Rotas Principais**
+
 ### **1. Cadastrar Pauta**
 **POST** `/api/v1/pautas`  
 **Body (JSON):**
@@ -72,34 +77,86 @@ Esta é uma aplicação backend para gerenciar sessões de votação no contexto
 ```
 
 ### **2. Abrir Sessão de Votação**
-**POST** `/api/votacao/sessao/abrir?pautaId=1&duracaoEmMinutos=30`  
+**POST** `/api/votacao/sessao/abrir`  
 **Body (JSON):**
 ```json
 {
-    "duracao": 5
+    "pautaId": 1,
+    "duracaoEmMinutos": 30
 }
 ```
-**Nota:** `duracao` é o tempo da sessão em minutos (opcional, padrão: 1).
+**Nota:**
+- `pautaId`: ID da pauta associada à sessão.
+- `duracaoEmMinutos`: Duração da sessão em minutos (opcional, padrão: 1 minuto).
 
 ### **3. Registrar Voto**
-**POST** `/api/v1/pautas/{id}/votos`  
+**POST** `/api/v1/votos`  
 **Body (JSON):**
 ```json
 {
-    "idAssociado": "12345",
-    "voto": "SIM"
+    "sessaoId": 1,
+    "associadoId": "12345",
+    "votoSim": true
 }
 ```
+**Nota:**
+- `sessaoId`: ID da sessão em que o voto está sendo registrado.
+- `associadoId`: ID do associado que está votando.
+- `votoSim`: `true` para voto SIM, `false` para voto NÃO.
 
 ### **4. Contabilizar Resultado**
-**GET** `/api/v1/pautas/{id}/resultado`  
+**GET** `/api/v1/votos/{sessaoId}/resultado`  
 **Resposta (JSON):**
 ```json
 {
-    "pauta": "Título da Pauta",
     "votosSim": 10,
     "votosNao": 5
 }
+```
+
+### **5. Validar CPF**
+**GET** `/api/cpf/validar/{cpf}`  
+**Resposta (JSON):**
+```json
+{
+    "status": "CPF válido"
+}
+```
+**Nota:**
+- `{cpf}`: CPF a ser validado.
+
+### **6. Listar Sessões**
+**GET** `/api/sessoes`  
+**Resposta (JSON):**
+```json
+[
+    {
+        "id": 1,
+        "pauta": "Título da Pauta",
+        "inicio": "2024-11-01T10:00:00",
+        "fim": "2024-11-01T10:30:00"
+    },
+    {
+        "id": 2,
+        "pauta": "Outra Pauta",
+        "inicio": "2024-11-02T10:00:00",
+        "fim": "2024-11-02T10:30:00"
+    }
+]
+```
+
+### **7. Listar Sessões Abertas**
+**GET** `/api/sessoes/abertas`  
+**Resposta (JSON):**
+```json
+[
+    {
+        "id": 1,
+        "pauta": "Título da Pauta",
+        "inicio": "2024-11-01T10:00:00",
+        "fim": "2024-11-01T10:30:00"
+    }
+]
 ```
 
 ---

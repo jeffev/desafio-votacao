@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/votos")
 public class VotoController {
@@ -21,11 +24,15 @@ public class VotoController {
     }
 
     @GetMapping("/{sessaoId}/resultado")
-    public ResponseEntity<String> obterResultado(@PathVariable Long sessaoId) {
+    public ResponseEntity<Map<String, Long>> obterResultado(@PathVariable Long sessaoId) {
         long votosSim = votoService.contarVotosSim(sessaoId);
         long votosNao = votoService.contarVotosNao(sessaoId);
 
-        String resultado = String.format("Votos Sim: %d, Votos Não: %d", votosSim, votosNao);
+        Map<String, Long> resultado = new HashMap<>();
+        resultado.put("votosSim", votosSim);
+        resultado.put("votosNao", votosNao);
+
         return ResponseEntity.ok(resultado);
     }
+
 }
