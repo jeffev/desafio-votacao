@@ -1,6 +1,7 @@
 package com.example.desafio_votacao.service;
 
 import com.example.desafio_votacao.exception.ResourceNotFoundException;
+import com.example.desafio_votacao.facade.CpfValidationFacade;
 import com.example.desafio_votacao.model.Sessao;
 import com.example.desafio_votacao.model.Voto;
 import com.example.desafio_votacao.repository.VotoRepository;
@@ -17,9 +18,12 @@ public class VotoService {
     @Autowired
     private SessaoService sessaoService;
 
+    @Autowired
+    private CpfValidationFacade cpfValidationFacade;
+
     /**
-     * Registra um voto para uma sessão, validando se a sessão está aberta
-     * e se o associado já votou.
+     * Registra um voto para uma sessão, validando se a sessão está aberta,
+     * se o associado já votou e se o CPF do associado é válido para votar.
      *
      * @param sessaoId    o ID da sessão
      * @param associadoId o identificador único do associado
@@ -36,6 +40,11 @@ public class VotoService {
 
         if (votoRepository.existsBySessao_Pauta_IdAndAssociadoId(sessao.getPauta().getId(), associadoId)) {
             throw new IllegalArgumentException("O associado já votou nesta pauta.");
+        }
+
+        String statusCpf = cpfValidationFacade.validarCpf(associadoId);
+        if ("UNABLE_TO_VOTE".equals(statusCpf)) {
+            throw new IllegalArgumentException("O CPF não é elegível para votar.");
         }
 
         Voto voto = new Voto();

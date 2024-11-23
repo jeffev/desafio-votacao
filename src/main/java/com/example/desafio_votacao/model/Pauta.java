@@ -16,9 +16,6 @@ public class Pauta {
     @Column(nullable = false)
     private String descricao;
 
-    @OneToMany(mappedBy = "pauta", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Sessao> sessoes;
-
     // Getters e Setters
     public Long getId() {
         return id;
@@ -44,11 +41,4 @@ public class Pauta {
         this.descricao = descricao;
     }
 
-    public List<Sessao> getSessoes() {
-        return sessoes;
-    }
-
-    public void setSessoes(List<Sessao> sessoes) {
-        this.sessoes = sessoes;
-    }
 }

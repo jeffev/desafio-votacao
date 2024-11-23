@@ -1,10 +1,13 @@
 package com.example.desafio_votacao.controller;
 
+import com.example.desafio_votacao.dto.SessaoRequestDTO;
 import com.example.desafio_votacao.model.Sessao;
 import com.example.desafio_votacao.service.SessaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/sessoes")
@@ -14,10 +17,8 @@ public class SessaoController {
     private SessaoService sessaoService;
 
     @PostMapping("/abrir")
-    public ResponseEntity<Sessao> abrirSessao(
-            @RequestParam Long pautaId,
-            @RequestParam(required = false) Integer duracaoEmMinutos) {
-        return ResponseEntity.ok(sessaoService.abrirSessao(pautaId, duracaoEmMinutos));
+    public ResponseEntity<Sessao> abrirSessao(@RequestBody SessaoRequestDTO sessaoRequestDTO) {
+        return ResponseEntity.ok(sessaoService.abrirSessao(sessaoRequestDTO.getPautaId(), sessaoRequestDTO.getDuracaoEmMinutos()));
     }
 
     @GetMapping("/{id}")
@@ -29,5 +30,19 @@ public class SessaoController {
     public ResponseEntity<String> verificarStatusSessao(@PathVariable Long id) {
         boolean aberta = sessaoService.isSessaoAberta(id);
         return ResponseEntity.ok(aberta ? "Sessão aberta" : "Sessão encerrada");
+    }
+
+    // Endpoint para listar todas as sessões
+    @GetMapping
+    public ResponseEntity<List<Sessao>> listarSessoes() {
+        List<Sessao> sessoes = sessaoService.listarTodasSessoes();
+        return ResponseEntity.ok(sessoes);
+    }
+
+    // Endpoint para listar as sessões abertas
+    @GetMapping("/abertas")
+    public ResponseEntity<List<Sessao>> listarSessoesAbertas() {
+        List<Sessao> sessoesAbertas = sessaoService.listarSessoesAbertas();
+        return ResponseEntity.ok(sessoesAbertas);
     }
 }

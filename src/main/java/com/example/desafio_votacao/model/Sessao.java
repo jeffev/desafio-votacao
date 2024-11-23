@@ -21,9 +21,6 @@ public class Sessao {
     @Column(nullable = false)
     private LocalDateTime fim;
 
-    @OneToMany(mappedBy = "sessao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Voto> votos;
-
     // Getters e Setters
     public Long getId() {
         return id;
@@ -55,13 +52,5 @@ public class Sessao {
 
     public void setFim(LocalDateTime fim) {
         this.fim = fim;
-    }
-
-    public List<Voto> getVotos() {
-        return votos;
-    }
-
-    public void setVotos(List<Voto> votos) {
-        this.votos = votos;
     }
 }

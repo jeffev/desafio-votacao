@@ -72,7 +72,7 @@ Esta é uma aplicação backend para gerenciar sessões de votação no contexto
 ```
 
 ### **2. Abrir Sessão de Votação**
-**POST** `/api/v1/pautas/{id}/sessao`  
+**POST** `/api/votacao/sessao/abrir?pautaId=1&duracaoEmMinutos=30`  
 **Body (JSON):**
 ```json
 {

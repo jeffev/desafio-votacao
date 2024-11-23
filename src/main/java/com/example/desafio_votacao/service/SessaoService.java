@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class SessaoService {
@@ -19,13 +20,17 @@ public class SessaoService {
     @Autowired
     private PautaService pautaService;
 
+    /**
+     * Abre uma nova sessão para uma pauta específica, com duração opcional.
+     *
+     * @param pautaId o ID da pauta para a qual a sessão será aberta
+     * @param duracaoEmMinutos a duração da sessão em minutos (se não fornecido, será 1 minuto)
+     * @return a sessão criada
+     * @throws ValidationException caso o ID da pauta seja inválido ou se já existir uma sessão aberta para a pauta
+     */
     public Sessao abrirSessao(Long pautaId, Integer duracaoEmMinutos) {
         if (pautaId == null) {
             throw new ValidationException("O ID da pauta é obrigatório.");
-        }
-
-        if (duracaoEmMinutos != null && duracaoEmMinutos <= 0) {
-            throw new ValidationException("A duração da sessão deve ser maior que zero.");
         }
 
         Pauta pauta = pautaService.buscarPautaPorId(pautaId);
@@ -42,6 +47,13 @@ public class SessaoService {
         return sessaoRepository.save(sessao);
     }
 
+    /**
+     * Busca uma sessão pelo ID.
+     *
+     * @param id o ID da sessão a ser buscada
+     * @return a sessão encontrada
+     * @throws ValidationException caso o ID seja inválido ou caso a sessão não seja encontrada
+     */
     public Sessao buscarSessaoPorId(Long id) {
         if (id == null) {
             throw new ValidationException("O ID da sessão é obrigatório.");
@@ -52,6 +64,13 @@ public class SessaoService {
         );
     }
 
+    /**
+     * Verifica se uma sessão está aberta.
+     *
+     * @param sessaoId o ID da sessão a ser verificada
+     * @return true se a sessão estiver aberta, caso contrário false
+     * @throws ValidationException caso a sessão esteja fechada
+     */
     public boolean isSessaoAberta(Long sessaoId) {
         Sessao sessao = buscarSessaoPorId(sessaoId);
         boolean isAberta = LocalDateTime.now().isBefore(sessao.getFim());
@@ -59,5 +78,23 @@ public class SessaoService {
             throw new ValidationException("A sessão está fechada.");
         }
         return isAberta;
+    }
+
+    /**
+     * Lista todas as sessões.
+     *
+     * @return uma lista contendo todas as sessões
+     */
+    public List<Sessao> listarTodasSessoes() {
+        return sessaoRepository.findAll();
+    }
+
+    /**
+     * Lista todas as sessões abertas (com fim posterior à data e hora atual).
+     *
+     * @return uma lista contendo as sessões abertas
+     */
+    public List<Sessao> listarSessoesAbertas() {
+        return sessaoRepository.findByFimAfter(LocalDateTime.now());
     }
 }

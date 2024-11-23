@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface SessaoRepository extends JpaRepository<Sessao, Long> {
@@ -16,4 +17,7 @@ public interface SessaoRepository extends JpaRepository<Sessao, Long> {
      * @return true se houver uma sessão aberta, caso contrário false
      */
     boolean existsByPautaIdAndFimAfter(Long pautaId, LocalDateTime dataHoraAtual);
+
+    List<Sessao> findByFimAfter(LocalDateTime dataHoraAtual);
+
 }

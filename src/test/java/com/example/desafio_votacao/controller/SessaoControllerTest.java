@@ -1,5 +1,6 @@
 package com.example.desafio_votacao.controller;
 
+import com.example.desafio_votacao.dto.SessaoRequestDTO;
 import com.example.desafio_votacao.model.Pauta;
 import com.example.desafio_votacao.model.Sessao;
 import com.example.desafio_votacao.service.SessaoService;
@@ -40,9 +41,13 @@ public class SessaoControllerTest {
 
     @Test
     public void testAbrirSessao() {
+        SessaoRequestDTO sessaoRequestDTO = new SessaoRequestDTO();
+        sessaoRequestDTO.setPautaId(1L);
+        sessaoRequestDTO.setDuracaoEmMinutos(30);
+
         when(sessaoService.abrirSessao(1L, 30)).thenReturn(sessao);
 
-        ResponseEntity<Sessao> response = sessaoController.abrirSessao(1L, 30);
+        ResponseEntity<Sessao> response = sessaoController.abrirSessao(sessaoRequestDTO);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(sessao, response.getBody());

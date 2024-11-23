@@ -1,5 +1,6 @@
 package com.example.desafio_votacao.controller;
 
+import com.example.desafio_votacao.dto.VotoRequestDTO;
 import com.example.desafio_votacao.model.Voto;
 import com.example.desafio_votacao.service.VotoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,9 @@ public class VotoController {
     private VotoService votoService;
 
     @PostMapping
-    public ResponseEntity<Voto> registrarVoto(
-            @RequestParam Long sessaoId,
-            @RequestParam String associadoId,
-            @RequestParam boolean votoSim) {
-        return ResponseEntity.ok(votoService.registrarVoto(sessaoId, associadoId, votoSim));
+    public ResponseEntity<Voto> registrarVoto(@RequestBody VotoRequestDTO votoRequest) {
+        Voto voto = votoService.registrarVoto(votoRequest.getSessaoId(), votoRequest.getAssociadoId(), votoRequest.isVotoSim());
+        return ResponseEntity.ok(voto);
     }
 
     @GetMapping("/{sessaoId}/resultado")
