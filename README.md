@@ -51,6 +51,19 @@ Esta é uma aplicação backend para gerenciar sessões de votação no contexto
    spring.datasource.password=sua_senha
    spring.jpa.hibernate.ddl-auto=update
    spring.jpa.show-sql=true
+   
+   # Nível de log para a aplicação
+    logging.level.root=INFO
+    logging.level.com.example.desafio_votacao.controller=DEBUG
+    
+    # Padrão do log no console
+    logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %msg%n
+    
+    # Padrão do log em arquivo
+    logging.file.name=logs/desafio_votacao.log
+    logging.file.max-size=10MB
+    logging.file.max-history=30
+
    ```
 
 3. **Execute a aplicação**
