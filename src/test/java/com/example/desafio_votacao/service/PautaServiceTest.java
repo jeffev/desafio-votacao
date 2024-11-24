@@ -11,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,13 +65,16 @@ public class PautaServiceTest {
 
     @Test
     void testListarPautas() {
-        when(pautaRepository.findAll()).thenReturn(List.of(pauta));
+        Pauta pauta = new Pauta();
+        Pageable pageable = PageRequest.of(1, 10);
 
-        var result = pautaService.listarPautas();
+        when(pautaRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of(pauta)));
+
+        var result = pautaService.listarPautas(1, 10);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        verify(pautaRepository, times(1)).findAll();
+        verify(pautaRepository, times(1)).findAll(pageable);
     }
 
     @Test

@@ -6,7 +6,10 @@ import com.example.desafio_votacao.model.Pauta;
 import com.example.desafio_votacao.model.Sessao;
 import com.example.desafio_votacao.repository.SessaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,21 +31,21 @@ public class SessaoService {
      * @return a sessão criada
      * @throws ValidationException caso o ID da pauta seja inválido ou se já existir uma sessão aberta para a pauta
      */
+    @Transactional
     public Sessao abrirSessao(Long pautaId, Integer duracaoEmMinutos) {
-        if (pautaId == null) {
-            throw new ValidationException("O ID da pauta é obrigatório.");
-        }
+        validarId(pautaId);
 
         Pauta pauta = pautaService.buscarPautaPorId(pautaId);
+        LocalDateTime now = LocalDateTime.now();
 
-        if (sessaoRepository.existsByPautaIdAndFimAfter(pautaId, LocalDateTime.now())) {
+        if (sessaoRepository.existsByPautaIdAndFimAfter(pautaId, now)) {
             throw new ValidationException("Já existe uma sessão aberta para a pauta informada.");
         }
 
         Sessao sessao = new Sessao();
         sessao.setPauta(pauta);
-        sessao.setInicio(LocalDateTime.now());
-        sessao.setFim(LocalDateTime.now().plusMinutes(duracaoEmMinutos != null ? duracaoEmMinutos : 1));
+        sessao.setInicio(now);
+        sessao.setFim(now.plusMinutes(duracaoEmMinutos != null ? duracaoEmMinutos : 1));
 
         return sessaoRepository.save(sessao);
     }
@@ -55,9 +58,7 @@ public class SessaoService {
      * @throws ValidationException caso o ID seja inválido ou caso a sessão não seja encontrada
      */
     public Sessao buscarSessaoPorId(Long id) {
-        if (id == null) {
-            throw new ValidationException("O ID da sessão é obrigatório.");
-        }
+        validarId(id);
 
         return sessaoRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Sessão", id)
@@ -73,7 +74,9 @@ public class SessaoService {
      */
     public boolean isSessaoAberta(Long sessaoId) {
         Sessao sessao = buscarSessaoPorId(sessaoId);
-        boolean isAberta = LocalDateTime.now().isBefore(sessao.getFim());
+        LocalDateTime now = LocalDateTime.now();
+
+        boolean isAberta = now.isBefore(sessao.getFim());
         if (!isAberta) {
             throw new ValidationException("A sessão está fechada.");
         }
@@ -85,8 +88,8 @@ public class SessaoService {
      *
      * @return uma lista contendo todas as sessões
      */
-    public List<Sessao> listarTodasSessoes() {
-        return sessaoRepository.findAll();
+    public List<Sessao> listarTodasSessoes(Pageable pageable) {
+        return sessaoRepository.findAll(pageable).getContent();
     }
 
     /**
@@ -94,7 +97,19 @@ public class SessaoService {
      *
      * @return uma lista contendo as sessões abertas
      */
-    public List<Sessao> listarSessoesAbertas() {
-        return sessaoRepository.findByFimAfter(LocalDateTime.now());
+    public List<Sessao> listarSessoesAbertas(Pageable pageable) {
+        return sessaoRepository.findByFimAfter(LocalDateTime.now(), pageable);
+    }
+
+    /**
+     * Valida se o ID é nulo e lança uma exceção em caso positivo.
+     *
+     * @param id o ID a ser validado
+     * @throws ValidationException caso o ID seja nulo
+     */
+    private void validarId(Long id) {
+        if (id == null) {
+            throw new ValidationException("O ID é obrigatório.");
+        }
     }
 }

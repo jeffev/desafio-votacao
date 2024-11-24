@@ -60,7 +60,7 @@ class SessaoServiceTest {
     @Test
     void testAbrirSessaoComPautaIdNull() {
         ValidationException thrown = assertThrows(ValidationException.class, () -> sessaoService.abrirSessao(null, 30));
-        assertEquals("O ID da pauta é obrigatório.", thrown.getMessage());
+        assertEquals("O ID é obrigatório.", thrown.getMessage());
     }
 
     @Test

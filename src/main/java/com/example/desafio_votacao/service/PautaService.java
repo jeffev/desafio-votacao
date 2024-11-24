@@ -5,6 +5,10 @@ import com.example.desafio_votacao.exception.ValidationException;
 import com.example.desafio_votacao.model.Pauta;
 import com.example.desafio_votacao.repository.PautaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,16 +25,21 @@ public class PautaService {
      * @return a pauta salva.
      */
     public Pauta criarPauta(Pauta pauta) {
-        validarPauta(pauta); // Valida a pauta antes de salvar
+        validarPauta(pauta);
         return pautaRepository.save(pauta);
     }
 
     /**
-     * Lista todas as pautas.
+     * Lista todas as pautas com paginação.
+     * @param page número da página.
+     * @param size tamanho da página.
      * @return lista de pautas.
      */
-    public List<Pauta> listarPautas() {
-        return pautaRepository.findAll();
+    @Cacheable("pautas")
+    public List<Pauta> listarPautas(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Pauta> pautasPage = pautaRepository.findAll(pageable);
+        return pautasPage.getContent();
     }
 
     /**

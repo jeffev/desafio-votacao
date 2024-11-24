@@ -48,13 +48,13 @@ public class PautaControllerTest {
     @Test
     public void testListarPautas() {
         List<Pauta> pautas = Arrays.asList(pauta);
-        when(pautaService.listarPautas()).thenReturn(pautas);
+        when(pautaService.listarPautas(1,10)).thenReturn(pautas);
 
-        ResponseEntity<List<Pauta>> response = pautaController.listarPautas();
+        ResponseEntity<List<Pauta>> response = pautaController.listarPautas(1,10);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(pautas, response.getBody());
-        verify(pautaService, times(1)).listarPautas();
+        verify(pautaService, times(1)).listarPautas(1,10);
     }
 
     @Test
