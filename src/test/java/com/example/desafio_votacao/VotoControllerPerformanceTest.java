@@ -14,6 +14,8 @@ public class VotoControllerPerformanceTest {
     @Mock
     private MockMvc mockMvc;
 
+    private static final long MAX_EXECUTION_TIME = 2000;  // Defina o valor máximo de tempo de execução
+
     @Test
     public void testRegistrarVotoPerformance() throws Exception {
         long startTime = System.currentTimeMillis();
@@ -29,6 +31,6 @@ public class VotoControllerPerformanceTest {
 
         System.out.println("Tempo total para registrar 100.000 votos: " + duration + "ms");
 
-        assertTrue(duration < 2000, "O teste falhou porque o tempo de execução excedeu 2000ms. Tempo de execução: " + duration + "ms");
+        assertTrue(duration < MAX_EXECUTION_TIME, "O teste falhou porque o tempo de execução excedeu " + MAX_EXECUTION_TIME + "ms. Tempo de execução: " + duration + "ms");
     }
 }
